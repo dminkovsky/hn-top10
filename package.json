@@ -1,0 +1,20 @@
+{
+  "name": "hn-top10",
+  "version": "1.0.0",
+  "description": "Print the current top 10 posts on HackerNews",
+  "main": "hn.js",
+  "dependencies": {
+    "request": "^2.51.0",
+    "bluebird": "^2.8.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dminkovsky/hn-top10.git"
+  },
+  "author": "Dmitry Minkovsky",
+  "license": "Public Domain",
+  "bugs": {
+    "url": "https://github.com/dminkovsky/hn-top10/issues"
+  },
+  "homepage": "https://github.com/dminkovsky/hn-top10"
+}
