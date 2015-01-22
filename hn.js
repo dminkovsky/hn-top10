@@ -6,6 +6,7 @@ var URL_ITEM = function(storyId) { return 'https://hacker-news.firebaseio.com/v0
 
 var Promise = require('bluebird');
 var request = Promise.promisify(require('request'));
+var util = require('util');
 
 request(URL_TOP_STORIES).spread(function(response, body) {
     var storyIds = JSON.parse(body).slice(0, COUNT);
@@ -19,7 +20,13 @@ request(URL_TOP_STORIES).spread(function(response, body) {
         });
     });
 }).then(function(stories) {
-    console.log(stories);
+    function pad(i) {
+        return ('  ' + i).slice(-2);
+    }
+    function format(story) {
+        return util.format('\n%s  %s\n    %s\n', pad(story[0]), story[1], story[2]);
+    }
+    console.log(stories.map(format).join(''));
 }).catch(function(error) {
     console.log(error);
 });
