@@ -13,6 +13,9 @@
   },
   "author": "Dmitry Minkovsky",
   "license": "Public Domain",
+  "bin": {
+    "hn": "hn.js"
+  },
   "bugs": {
     "url": "https://github.com/dminkovsky/hn-top10/issues"
   },
