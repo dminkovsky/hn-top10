@@ -15,16 +15,16 @@ request(URL_TOP_STORIES).spread(function(response, body) {
         var url = URL_ITEM(storyId);
 
         return request(url).spread(function(response, body) {
-            body = JSON.parse(body);
-            return [ i + 1, body.title, body.url, body.score ];
+            return JSON.parse(body);
         });
     });
 }).then(function(stories) {
     function pad(i) {
         return ('  ' + i).slice(-2);
     }
-    function format(story) {
-        return util.format('\n%s  (%s)  %s\n    %s\n', pad(story[0]), story[3], story[1], story[2]);
+    function format(story, i) {
+        var format = '\n%s  (%s)  %s\n    %s\n';
+        return util.format(format, pad(i + 1), story.score, story.title, story.url);
     }
     console.log(stories.map(format).join(''));
 }).catch(function(error) {
