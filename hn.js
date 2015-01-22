@@ -28,5 +28,6 @@ request(URL_TOP_STORIES).spread(function(response, body) {
     }
     console.log(stories.map(format).join(''));
 }).catch(function(error) {
-    console.log(error);
+    console.log(error.stack);
+    process.exit();
 });
