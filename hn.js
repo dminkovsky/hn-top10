@@ -16,7 +16,7 @@ request(URL_TOP_STORIES).spread(function(response, body) {
 
         return request(url).spread(function(response, body) {
             body = JSON.parse(body);
-            return [ i + 1, body.title, body.url ];
+            return [ i + 1, body.title, body.url, body.score ];
         });
     });
 }).then(function(stories) {
@@ -24,7 +24,7 @@ request(URL_TOP_STORIES).spread(function(response, body) {
         return ('  ' + i).slice(-2);
     }
     function format(story) {
-        return util.format('\n%s  %s\n    %s\n', pad(story[0]), story[1], story[2]);
+        return util.format('\n%s  (%s)  %s\n    %s\n', pad(story[0]), story[3], story[1], story[2]);
     }
     console.log(stories.map(format).join(''));
 }).catch(function(error) {
