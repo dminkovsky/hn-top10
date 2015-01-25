@@ -12,18 +12,13 @@ function getStoryIds() { return request(HN_TOP_STORIES).spread(function(resp, bo
 
 function getStory(id) { return request(HN_ITEM(id)).spread(function(resp, body) { return JSON.parse(body); }); }
 
-function format(stories) {
+function formatStory(story, i) {
     function pad(j) { return ('  ' + j).slice(-2); }
-    return stories.map(function(story, i) {
-        return u.format('\n%s  (%s)  %s\n    %s\n', pad(i + 1), story.score, story.title, story.url);
-    }).join('');
+    return u.format('\n%s  (%s)  %s\n    %s\n', pad(i + 1), story.score, story.title, story.url);
 }
 
 getStoryIds()
     .map(getStory)
-    .then(format)
-    .then(console.log.bind(console))
-    .catch(function(error) {
-        console.log(error.stack);
-        process.exit();
-    });
+    .map(formatStory)
+    .then(function (stories) { console.log(stories.join('')); })
+    .catch(function(error) { console.log(error.stack); process.exit(); });
