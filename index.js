@@ -1,31 +1,29 @@
 #!/usr/bin/env node
 
 var COUNT = 10;
-var URL_TOP_STORIES = 'https://hacker-news.firebaseio.com/v0/topstories.json';
-var URL_ITEM = function(itemId) { return 'https://hacker-news.firebaseio.com/v0/item/' + itemId + '.json'; }
+var HN_TOP_STORIES = 'https://hacker-news.firebaseio.com/v0/topstories.json';
+var HN_ITEM = function(itemId) { return u.format('https://hacker-news.firebaseio.com/v0/item/%s.json', itemId); }
 
+var u = require('util');
 var Promise = require('bluebird');
 var request = Promise.promisify(require('request'));
-var util = require('util');
 
-request(URL_TOP_STORIES).spread(function(response, body) {
-    var storyIds = JSON.parse(body).slice(0, COUNT);
+function getStoryIds() { return request(HN_TOP_STORIES).spread(function(resp, body) { return JSON.parse(body).slice(0, COUNT); }); }
 
-    return Promise.map(storyIds, function(storyId) {
-        var url = URL_ITEM(storyId);
+function getStory(id) { return request(HN_ITEM(id)).spread(function(resp, body) { return JSON.parse(body); }); }
 
-        return request(url).spread(function(response, body) {
-            return JSON.parse(body);
-        });
+function format(stories) {
+    function pad(j) { return ('  ' + j).slice(-2); }
+    return stories.map(function(story, i) {
+        return u.format('\n%s  (%s)  %s\n    %s\n', pad(i + 1), story.score, story.title, story.url);
+    }).join('');
+}
+
+getStoryIds()
+    .map(getStory)
+    .then(format)
+    .then(console.log.bind(console))
+    .catch(function(error) {
+        console.log(error.stack);
+        process.exit();
     });
-}).then(function(stories) {
-    function formatStory(story, i) {
-        function pad(j) { return ('  ' + j).slice(-2); }
-        var format = '\n%s  (%s)  %s\n    %s\n';
-        return util.format(format, pad(i + 1), story.score, story.title, story.url);
-    }
-    console.log(stories.map(formatStory).join(''));
-}).catch(function(error) {
-    console.log(error.stack);
-    process.exit();
-});
